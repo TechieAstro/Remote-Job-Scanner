@@ -1,21 +1,26 @@
 # Remote Job Scanner Daemon
 
-A fully autonomous remote job scanner that polls for new opportunities in **Cybersecurity**, **Virtual Assistant**, and **IT Support** categories. The scanner runs hourly in the background using PM2 and saves reports locally. Once SMTP is configured, it will email reports to you.
+A fully autonomous, multi-source remote job scanner that polls for new opportunities in **Cybersecurity**, **Virtual Assistant**, and **IT Support** categories. The scanner runs hourly in the background using PM2, saves reports locally, and sends digests via **Email**, **Discord Webhooks**, and **Telegram Bots**.
 
-## System Architecture
+## Key Features
 
-- **`config.json`**: Contains search keywords, local reports directory, and email/SMTP credentials.
-- **`jobs_db.json`**: A JSON database tracking all processed job GUIDs to prevent duplicate alerts.
-- **`scanner.py`**: The core logic script. It fetches job listings, filters duplicates, renders the email HTML, saves local copies, and sends the emails.
-- **`daemon.py`**: Python looping daemon that executes the scanner every 3600 seconds (1 hour).
-- **`launcher.js`**: Node.js launcher that PM2 uses to manage and persist the daemon.
-- **`run_scanner.bat`**: A convenience batch file to run the scanner instantly and append console logs to `execution_log.txt`.
+- **Multi-Source Aggregation**: Fetches listings from 4 remote job sources:
+  - **Himalayas API** (Tech and startup-focused remote listings)
+  - **Remotive API** (Global remote developer, sales, and support roles)
+  - **We Work Remotely RSS** (Established remote-first jobs catalog)
+  - **Arbeitnow API** (Remote-friendly direct employer listings)
+- **JSON-LD Schema Scraping**: Automatically crawls the landing pages of new job listings to locate schema metadata (`datePosted`) for 100% accurate job creation dates.
+- **Fuzzy Semantic Deduplication**: Normalizes titles and company names to prevent the same job from being emailed multiple times if it is aggregated from multiple sources.
+- **Multi-Channel Notifications**:
+  - Email (via SMTP / Gmail)
+  - Discord Webhook Integrations (Embed format)
+  - Telegram Bots (HTML message format)
 
 ---
 
 ## Configuration (`config.json`)
 
-To enable email notifications, edit [config.json](file:///C:/Users/Administrator/remote-job-scanner/config.json) with your credentials:
+To configure notifications and query filters, edit [config.json](file:///C:/Users/Administrator/remote-job-scanner/config.json):
 
 ```json
 {
@@ -27,6 +32,13 @@ To enable email notifications, edit [config.json](file:///C:/Users/Administrator
     "sender_email": "your-email@gmail.com",
     "recipient_email": "destination-email@gmail.com",
     "use_tls": true
+  },
+  "discord": {
+    "webhook_url": "https://discord.com/api/webhooks/... (Leave empty to disable)"
+  },
+  "telegram": {
+    "bot_token": "BOT_TOKEN (Leave empty to disable)",
+    "chat_id": "CHAT_ID (Leave empty to disable)"
   },
   "queries": {
     "cybersecurity": "cybersecurity",
@@ -40,7 +52,7 @@ To enable email notifications, edit [config.json](file:///C:/Users/Administrator
 }
 ```
 
-*Note: For Gmail, you will need to generate an **App Password** from your Google account settings under 2-Step Verification.*
+*Note: For Gmail SMTP, generate an **App Password** from your Google account settings under 2-Step Verification.*
 
 ---
 
@@ -66,7 +78,7 @@ pm2 stop remote-job-scanner
 ```
 
 ### 4. Manually Run a Scan
-To trigger a manual scan immediately outside the hourly schedule, double-click [run_scanner.bat](file:///C:/Users/Administrator/remote-job-scanner/run_scanner.bat) or execute it from the terminal:
+To trigger a manual scan immediately outside the hourly schedule, execute:
 ```cmd
 C:\Users\Administrator\remote-job-scanner\run_scanner.bat
 ```
@@ -74,5 +86,5 @@ Logs for manual runs are written to `execution_log.txt`.
 
 ---
 
-## Attribution & Data Source
-Job listings are retrieved from the free, public [Himalayas API](https://himalayas.app/docs/remote-jobs-api). As per the Himalayas API licensing terms, please include appropriate attribution back to Himalayas if you share this data.
+## Attribution & Licensing
+Job listings are retrieved using free and public APIs. Please include appropriate attribution back to **Himalayas**, **Remotive**, **We Work Remotely**, and **Arbeitnow** if you redistribute or republish this data.
