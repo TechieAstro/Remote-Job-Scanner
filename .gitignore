@@ -1,0 +1,21 @@
+# Local configurations and database
+config.json
+jobs_db.json
+
+# Local reports directory
+reports/
+
+# Log files
+execution_log.txt
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# IDE files
+.vscode/
+.idea/

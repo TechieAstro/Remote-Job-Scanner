@@ -1,0 +1,20 @@
+{
+  "email": {
+    "smtp_host": "smtp.gmail.com",
+    "smtp_port": 587,
+    "smtp_username": "your-email@gmail.com",
+    "smtp_password": "your-google-app-password",
+    "sender_email": "your-email@gmail.com",
+    "recipient_email": "destination-email@gmail.com",
+    "use_tls": true
+  },
+  "queries": {
+    "cybersecurity": "cybersecurity",
+    "virtual_assistant": "virtual assistant",
+    "it_support": "it support"
+  },
+  "send_empty_reports": false,
+  "save_local_reports": true,
+  "reports_dir": "reports",
+  "db_file": "jobs_db.json"
+}
